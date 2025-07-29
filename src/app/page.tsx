@@ -61,7 +61,7 @@ export default function HomePage() {
         <h2 className="text-4xl font-bold mb-4">Join Our Free Telegram Channel</h2>
         <p className="text-white/80 mb-6">Get free trading signals and updates daily. Our Telegram community helps you stay ahead with the market.</p>
         <a
-          href="https://t.me/oshilafxacademy"
+          href="https://t.me/milkingwithuwehs"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl text-lg font-semibold transition"

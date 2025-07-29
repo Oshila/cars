@@ -5,7 +5,7 @@ import { PlanProvider } from '@/context/PlanContext'
 import { AuthProvider } from '@/lib/auth'  // import AuthProvider
 
 export const metadata = {
-  title: 'OshilaFx',
+  title: 'UwehFx',
   description: 'Trading platform',
 }
 
