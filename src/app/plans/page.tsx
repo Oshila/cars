@@ -17,10 +17,10 @@ const PaystackWrapper = dynamic(() => import('../../components/PaystackWrapper')
 const plans = [
   {
     name: '1 day Access',
-    price: '₦24,000',
+    price: '₦100',
     amountInKobo: 10000,
     duration: '1 day',
-    features: ['Basic trading signals', 'Email alerts'],
+    features: ['Basic trading signals', 'Testing'],
   },
   {
     name: '2 Weeks Access',
