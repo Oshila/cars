@@ -95,7 +95,7 @@ export default function AdminNavbar() {
             Profile
           </Link>
           <Link
-            href="/login"
+            href="/admin-login"
             className="block hover:underline"
             onClick={() => setOpen(false)}
           >
