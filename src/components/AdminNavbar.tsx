@@ -34,7 +34,7 @@ export default function AdminNavbar() {
           <Link href="/admin/profile" className="hover:underline">
             Profile
           </Link>
-          <Link href="/login" className="hover:underline">
+          <Link href="/admin-login" className="hover:underline">
             Logout
           </Link>
         </div>
