@@ -74,6 +74,14 @@ export default function Dashboard() {
           <p className="mb-4 text-gray-700">Create and manage your active subscriptions.</p>
           <Link href="/subscription" className="inline-block bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">Manage Subscriptions</Link>
         </section>
+
+        {hasPlan && (
+          <section className="mb-8 p-6 border rounded shadow-sm bg-white">
+            <h2 className="text-xl font-semibold mb-2">Signal Room</h2>
+            <p className="mb-4 text-gray-700">Access premium signals posted by the admin team.</p>
+            <Link href="/signals" className="inline-block bg-black text-white px-4 py-2 rounded hover:bg-gray-700 transition">Enter Signal Room</Link>
+          </section>
+        )}
       </main>
     </>
   )
