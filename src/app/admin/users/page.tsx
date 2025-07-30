@@ -9,6 +9,7 @@ interface User {
   email: string
   name?: string
   role?: 'user' | 'admin'
+  plan?: string
 }
 
 export default function UsersAdmin() {
@@ -62,6 +63,7 @@ export default function UsersAdmin() {
             <th className="p-3 border border-gray-300">Name</th>
             <th className="p-3 border border-gray-300">Email</th>
             <th className="p-3 border border-gray-300">Role</th>
+            <th className="p-3 border border-gray-300">Plan</th> {/* NEW */}
             <th className="p-3 border border-gray-300">Actions</th>
           </tr>
         </thead>
@@ -72,6 +74,7 @@ export default function UsersAdmin() {
               <td className="p-2 border border-gray-300">{user.name ?? 'N/A'}</td>
               <td className="p-2 border border-gray-300">{user.email}</td>
               <td className="p-2 border border-gray-300 capitalize">{user.role ?? 'user'}</td>
+              <td className="p-2 border border-gray-300">{user.plan ?? 'None'}</td> {/* NEW */}
               <td className="p-2 border border-gray-300 space-x-2">
                 {user.role === 'admin' ? (
                   <button
@@ -93,7 +96,7 @@ export default function UsersAdmin() {
           ))}
           {users.length === 0 && (
             <tr>
-              <td colSpan={5} className="text-center p-4 text-gray-500 italic">
+              <td colSpan={6} className="text-center p-4 text-gray-500 italic">
                 No users found.
               </td>
             </tr>
@@ -103,5 +106,3 @@ export default function UsersAdmin() {
     </div>
   )
 }
-
-
