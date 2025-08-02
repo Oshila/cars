@@ -58,15 +58,16 @@ export default function UsersAdmin() {
       <h1 className="text-3xl font-bold mb-6 text-center">Users Management</h1>
       <table className="w-full border border-gray-300 rounded shadow-sm">
         <thead className="bg-gray-100">
-          <tr>
-            <th className="p-3 border border-gray-300">UID</th>
-            <th className="p-3 border border-gray-300">Name</th>
-            <th className="p-3 border border-gray-300">Email</th>
-            <th className="p-3 border border-gray-300">Role</th>
-            <th className="p-3 border border-gray-300">Plan</th> {/* NEW */}
-            <th className="p-3 border border-gray-300">Actions</th>
-          </tr>
-        </thead>
+  <tr>
+    <th className="p-3 border border-gray-300">UID</th>
+    <th className="p-3 border border-gray-300">Name</th>
+    <th className="p-3 border border-gray-300">Email</th>
+    <th className="p-3 border border-gray-300">Role</th>
+    <th className="p-3 border border-gray-300">Plan</th>
+    <th className="p-3 border border-gray-300">Actions</th>
+  </tr>
+</thead>
+
         <tbody>
           {users.map(user => (
             <tr key={user.uid} className="hover:bg-gray-50">
