@@ -7,29 +7,27 @@ import 'swiper/css/autoplay'
 import { Autoplay } from 'swiper/modules'
 
 export default function HomePage() {
-   const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
   const sliderImages = Array.from({ length: 14 }, (_, i) => `/profits/sample${i + 1}.jpg`)
 
-   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white">
+  return (
+    <div className="min-h-screen bg-black text-white font-sans">
       <header className="p-6 border-b border-white/10">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            <img src="/uweh-logo.jpg" alt="Logo" className="w-10 h-10 rounded-full object-cover" />
-            <h1 className="text-2xl font-bold">Uwehs Trade HUB</h1>
+            <img src="/alchemy-logo.jpg" alt="Alchemy Logo" className="w-10 h-10 rounded-full object-cover" />
+            <h1 className="text-2xl font-bold tracking-wide">Alchemy Traders Network</h1>
           </div>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex space-x-4">
+          <nav className="hidden md:flex space-x-6">
             <a href="#features" className="hover:underline">Features</a>
             <a href="#pricing" className="hover:underline">Pricing</a>
-            <a href="#profits" className="hover:underline">Trade Setups</a>
-            <a href="/login" className="bg-white text-black px-4 py-2 rounded-xl hover:bg-gray-200 transition">Login</a>
+            <a href="#profits" className="hover:underline">Setups</a>
+            <a href="/login" className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition">Login</a>
           </nav>
 
-          {/* Mobile Toggle */}
           <button
-            className="md:hidden text-white focus:outline-none"
+            className="md:hidden text-white"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -39,57 +37,78 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {mobileOpen && (
           <div className="md:hidden mt-4 px-4 space-y-3">
             <a href="#features" className="block hover:underline">Features</a>
             <a href="#pricing" className="block hover:underline">Pricing</a>
-            <a href="#profits" className="block hover:underline">Trade Setups</a>
-            <a href="/login" className="block bg-white text-black px-4 py-2 rounded-xl w-max hover:bg-gray-200 transition">Login</a>
+            <a href="#profits" className="block hover:underline">Setups</a>
+            <a href="/login" className="block bg-white text-black px-4 py-2 rounded w-max hover:bg-gray-200 transition">Login</a>
           </div>
         )}
       </header>
 
+  <section className="relative min-h-[90vh] flex items-center justify-center text-center text-white overflow-hidden bg-black">
+  {/* Background Image */}
+  <div className="absolute inset-0 z-0 flex items-center justify-center">
+    <img
+      src="/alchemy-hero.jpg" // Make sure the image is in public/
+      alt="Alchemy Background"
+      className="max-w-[90%] max-h-[90%] object-contain opacity-20"
+    />
+  </div>
 
-      <section className="py-24 px-6 text-center max-w-4xl mx-auto">
-        <h2 className="text-5xl font-extrabold mb-6">Trade Smarter. Earn Better.</h2>
-        <p className="text-xl text-white/70 mb-10">Join a trusted space where you grow with every trade — reliable signals, clear pricing, and real results.</p>
-        <a href="/register" className="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded-xl text-lg font-semibold transition">Get Started</a>
-      </section>
+  {/* Foreground Text */}
+  <div className="relative z-10 px-6 max-w-3xl">
+    <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
+      Trade Like an <span className="text-yellow-400">Alchemist</span>
+    </h1>
+    <p className="text-xl text-white/80 mb-8">
+      Master the market with precision, clarity, and strategy — one signal at a time.
+    </p>
+    <a
+      href="/register"
+      className="inline-block bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded-xl text-lg font-semibold transition"
+    >
+      Get Started
+    </a>
+  </div>
+</section>
 
-      <section className="py-20 px-6 bg-blue-950 text-white text-center">
+
+
+      <section className="py-20 px-6 text-center bg-gray-900">
         <h2 className="text-4xl font-bold mb-4">Join Our Free Telegram Channel</h2>
-        <p className="text-white/80 mb-6">Get free trading signals and updates daily. Our Telegram community helps you stay ahead with the market.</p>
+        <p className="text-white/70 mb-6">Daily signals. Real gains. No noise.</p>
         <a
-          href="https://t.me/milkingwithuwehs"
+          href="https://t.me/alchemytradersnetwork"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl text-lg font-semibold transition"
+          className="inline-block bg-white text-black px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition"
         >
           Join Telegram
         </a>
       </section>
 
-      <section id="features" className="py-20 bg-white text-black">
+      <section id="features" className="py-20 bg-black text-white">
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 px-6">
-          <div className="p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition">
+          <div className="p-6 rounded-xl border border-white/10 bg-gray-950 hover:shadow-md transition">
             <h3 className="text-xl font-bold mb-2">Private Signal Room</h3>
-            <p>Only your paid subscribers can access premium trading calls securely.</p>
+            <p>Only subscribers access premium calls, updated live.</p>
           </div>
-          <div className="p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition">
-            <h3 className="text-xl font-bold mb-2">Telegram Push Updates</h3>
-            <p>Instantly deliver accurate and timely alerts to all your clients via Telegram.</p>
+          <div className="p-6 rounded-xl border border-white/10 bg-gray-950 hover:shadow-md transition">
+            <h3 className="text-xl font-bold mb-2">Telegram Alerts</h3>
+            <p>Real-time alerts delivered directly to your Telegram app.</p>
           </div>
-          <div className="p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition">
-            <h3 className="text-xl font-bold mb-2">Designed for Traders</h3>
-            <p>Built with you in mind — clean layout, fast performance, and intuitive flows for seamless trading support.</p>
+          <div className="p-6 rounded-xl border border-white/10 bg-gray-950 hover:shadow-md transition">
+            <h3 className="text-xl font-bold mb-2">Built For Traders</h3>
+            <p>Minimal, fast, and effective for serious market players.</p>
           </div>
         </div>
       </section>
 
-      <section id="profits" className="py-20 bg-gray-900 text-white px-6">
+      <section id="profits" className="py-20 bg-white text-black px-6">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-8">Our Trade Setups & Profits</h2>
+          <h2 className="text-4xl font-bold text-center mb-8">Trade Setups & Results</h2>
           <Swiper
             slidesPerView={'auto'}
             spaceBetween={20}
@@ -111,42 +130,42 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 px-6 bg-white text-gray-900">
+      <section id="pricing" className="py-20 px-6 bg-black text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6">Why Choose UwehFx?</h2>
-          <ul className="space-y-4 text-left max-w-md mx-auto text-lg">
-            <li className="flex items-start">
-              <span className="text-green-600 font-bold text-xl mr-2">✓</span>
-              Consistent Daily Signals from Market Experts
-            </li>
-            <li className="flex items-start">
-              <span className="text-green-600 font-bold text-xl mr-2">✓</span>
-              Transparent Trade History and Updates
-            </li>
-            <li className="flex items-start">
-              <span className="text-green-600 font-bold text-xl mr-2">✓</span>
-              Strong Community with Real-Time Support
-            </li>
-          </ul>
+          <h2 className="text-4xl font-bold mb-4">Choose Your Plan</h2>
+          <p className="text-white/60 mb-12">Clear pricing. Flexible access. Consistent value.</p>
+          <div className="grid md:grid-cols-4 gap-6">
+            {[
+              { title: 'Bronze', price: '$15 / 2 Weeks', benefits: ['VIP Signal Room', 'Telegram Alerts'] },
+              { title: 'Silver', price: '$30 / 1 Month', benefits: ['+ Priority Signals', 'Trade Recaps'] },
+              { title: 'Gold', price: '$60 / 2 Months', benefits: ['+ Weekly Reviews', 'Exclusive Setups'] },
+              { title: 'Platinum', price: '$360 / Year', benefits: ['All Access', '1-on-1 Mentorship', 'Chart Templates'] },
+            ].map(({ title, price, benefits }) => (
+              <div key={title} className="p-6 bg-gray-900 border border-white/10 rounded-xl hover:shadow-lg transition">
+                <h3 className="text-xl font-bold">{title}</h3>
+                <p className="my-2 text-lg font-semibold">{price}</p>
+                <ul className="text-sm text-white/70 mb-4 space-y-1">
+                  {benefits.map((b, i) => <li key={i}>• {b}</li>)}
+                </ul>
+                <a href="/login" className="bg-white text-black w-full py-2 rounded-xl hover:bg-gray-300 transition block text-center">Subscribe</a>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-
-      {/* Mentorship Section */}
-      <section className="py-20 px-6 bg-gray-100 text-gray-900">
+      <section className="py-20 px-6 bg-white text-black">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 className="text-4xl font-bold mb-4">1-on-1 Mentorship</h2>
-            <p className="text-lg text-gray-700 mb-4">
-              Ready to level up your trading journey? Work directly with UwehFX to master strategy, psychology, and consistent profits.
-            </p>
-            <a href="https://t.me/UWEHFX" target="_blank" rel="noopener noreferrer" className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition">
+            <h2 className="text-4xl font-bold mb-4">1-on-1 With Alchemist</h2>
+            <p className="text-lg mb-4">Get direct mentorship on strategy, psychology, and consistent results — tailored to your trading journey.</p>
+            <a href="https://t.me/the_alchemist99" target="_blank" rel="noopener noreferrer" className="inline-block bg-black text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition">
               Apply Now
             </a>
           </div>
           <div className="flex justify-center">
             <img
-              src="/acc-manage.jpg"
+              src="/alchemy-manage.jpg"
               alt="Mentorship"
               className="rounded-2xl shadow-lg max-h-80 object-cover"
             />
@@ -154,57 +173,31 @@ export default function HomePage() {
         </div>
       </section>
 
-            <section id="pricing" className="py-20 px-6 bg-white text-gray-900">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4 text-blue-800">Choose Your Plan</h2>
-          <p className="text-gray-600 mb-12">Flexible pricing for every trader. Upgrade anytime.</p>
-          <div className="grid md:grid-cols-4 gap-6">
-            {/* Pricing Cards */}
-            {[
-              { title: 'Bronze', price: '$15 / 2 Weeks', benefits: ['Access to VIP Signal Room', 'Telegram Notifications'] },
-              { title: 'Silver', price: '$30 / 1 Month', benefits: ['Everything in Bronze', 'Priority Entry Signals'] },
-              { title: 'Gold', price: '$60 / 2 Months', benefits: ['All Silver Features', 'Weekly Market Breakdown'] },
-              { title: 'Platinum', price: '$360 / 1 Year', benefits: ['Everything Unlocked', '1-on-1 Strategy Session', 'Lifetime Chart Templates'] },
-            ].map(({ title, price, benefits }) => (
-              <div key={title} className="p-6 rounded-xl shadow-lg border border-blue-200 hover:shadow-xl transition">
-                <h3 className="text-xl font-bold text-blue-700">{title}</h3>
-                <p className="my-2 text-lg font-semibold">{price}</p>
-                <ul className="text-sm text-gray-700 mb-4 space-y-1">
-                  {benefits.map((b, i) => <li key={i}>{b}</li>)}
-                </ul>
-                <a href="/login" className="bg-blue-600 text-white w-full py-2 rounded-xl hover:bg-blue-700 transition block text-center">Subscribe</a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-blue-950 text-white py-10 px-6">
+      <footer className="bg-black text-white py-10 px-6">
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-xl font-bold mb-2">Uwehs Trade HUB</h3>
-            <p className="text-sm text-white/70">Empowering traders through education, signals, and community. Let&apos;s grow together.</p>
-
+            <h3 className="text-xl font-bold mb-2">Alchemy Traders Network</h3>
+            <p className="text-sm text-white/60">Empowering traders with knowledge, clarity, and confidence.</p>
           </div>
           <div>
             <h4 className="text-lg font-semibold mb-2">Contact</h4>
-            <p>Email: <a href="@gmail.com" className="underline">@gmail.com</a></p>
-            <p>Phone: +2347049507442</p>
+            <p>Email: <a href="mailto:alchemyfx@gmail.com" className="underline">alchemyfx@gmail.com</a></p>
+            <p>Phone: +230000000</p>
           </div>
           <div>
-            <h4 className="text-lg font-semibold mb-2">Follow Us</h4>
-            <div className="space-x-4">
-              <a href="https://t.me/milkingwithuwehs" target="_blank" className="hover:underline">Telegram</a>
-              <a href="https://instagram.com/oshilafxhttps://www.instagram.com/uwehstradehub?igsh=MTgxcTNmcjVxMGNreg==" target="_blank" className="hover:underline">Instagram</a>
-              <a href="https://x.com/uwehstradehub?s=21" target="_blank" className="hover:underline">X (Twitter)</a>
+            <h4 className="text-lg font-semibold mb-2">Follow Alchemist</h4>
+            <div className="space-y-1 text-sm">
+              <a href="https://t.me/alchemytradersnetwork" target="_blank" className="hover:underline block">Telegram Channel</a>
+              <a href="https://instagram.com/yannemmy01" target="_blank" className="hover:underline block">Instagram</a>
+              <a href="https://x.com/lqd_alchemist?s=21" target="_blank" className="hover:underline block">X (Twitter)</a>
             </div>
           </div>
         </div>
-        <div className="text-center text-white/50 text-sm mt-10">
-          © {new Date().getFullYear()} UwehFX. All rights reserved.
-        </div>
+       <div className="text-center text-white/40 text-sm mt-10">
+  © {new Date().getFullYear()} Alchemy Traders Network. All rights reserved.
+</div>
+
       </footer>
     </div>
-  );
+  )
 }

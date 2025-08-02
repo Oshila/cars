@@ -47,7 +47,7 @@ export default function Navbar({ hasPlan }: NavbarProps) {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-black font-extrabold text-xl tracking-wide">
-            Uweh Trading hub
+            Alchemy Traders Network
           </Link>
 
           {/* Desktop Menu */}

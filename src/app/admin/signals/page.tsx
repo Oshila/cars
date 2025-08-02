@@ -93,7 +93,7 @@ export default function SignalRoom() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: `An update has been sent by the admin. Login and check it out: https://uwehtrading.vercel.app/login`,
+          message: `An update has been sent by the admin. Login and check it out: https://Alchemist.vercel.app/login`,
         }),
       })
 
