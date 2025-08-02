@@ -12,10 +12,9 @@ import {
   doc,
   serverTimestamp,
   Timestamp,
+  getDoc,
 } from 'firebase/firestore'
-import { useAuth } from '@/lib/auth' // your auth hook to get user info
-
-const ADMIN_UID = 'BenuQF3rJeZOt0dfj7RKWMZ1HzC3'
+import { useAuth } from '@/lib/auth'
 
 type Message = {
   id: string
@@ -28,37 +27,51 @@ type Message = {
 export default function SignalRoom() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
+  const [userRole, setUserRole] = useState<'admin' | 'user'>('user')
   const { user } = useAuth()
-
-  const userRole = user?.uid === ADMIN_UID ? 'admin' : 'user'
 
   useEffect(() => {
     if (!user?.uid) return
 
-    const signalsRef = collection(firestore, 'signals')
-    const q = query(signalsRef, orderBy('timestamp', 'asc'))
+    const fetchUserRoleAndMessages = async () => {
+      try {
+        // Get user role from Firestore
+        const userRef = doc(firestore, 'users', user.uid)
+        const snapshot = await getDoc(userRef)
+        const data = snapshot.data()
+        if (data?.role === 'admin') {
+          setUserRole('admin')
+        }
 
-    const unsubscribe = onSnapshot(
-      q,
-      snapshot => {
-        const msgs = snapshot.docs.map(doc => {
-          const data = doc.data()
-          return {
-            id: doc.id,
-            text: data.text || '',
-            senderUid: data.senderUid || '',
-            senderRole: data.senderRole || 'user',
-            timestamp: data.timestamp || null,
+        // Subscribe to signal messages
+        const q = query(collection(firestore, 'signals'), orderBy('timestamp', 'asc'))
+        const unsubscribe = onSnapshot(
+          q,
+          snapshot => {
+            const msgs = snapshot.docs.map(doc => {
+              const data = doc.data()
+              return {
+                id: doc.id,
+                text: data.text || '',
+                senderUid: data.senderUid || '',
+                senderRole: data.senderRole || 'user',
+                timestamp: data.timestamp || null,
+              }
+            })
+            setMessages(msgs)
+          },
+          error => {
+            console.error('Error listening to signals:', error)
           }
-        })
-        setMessages(msgs)
-      },
-      error => {
-        console.error('Firestore snapshot error:', error)
-      }
-    )
+        )
 
-    return () => unsubscribe()
+        return unsubscribe
+      } catch (error) {
+        console.error('Error fetching user or messages:', error)
+      }
+    }
+
+    fetchUserRoleAndMessages()
   }, [user?.uid])
 
   const sendMessage = async () => {
@@ -69,7 +82,6 @@ export default function SignalRoom() {
     }
 
     try {
-      // Save message to Firestore
       await addDoc(collection(firestore, 'signals'), {
         text: input,
         senderUid: user!.uid,
@@ -77,8 +89,7 @@ export default function SignalRoom() {
         timestamp: serverTimestamp(),
       })
 
-      // Notify Telegram channel
-      const res = await fetch('/api/sendTelegramMessage', {
+      await fetch('/api/sendTelegramMessage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -86,26 +97,17 @@ export default function SignalRoom() {
         }),
       })
 
-      const data = await res.json()
-      console.log('Telegram API response:', data)
-
-      if (!res.ok) {
-        alert('Failed to notify Telegram channel.')
-      }
-
       setInput('')
     } catch (error) {
+      console.error('Failed to send message:', error)
       alert('Failed to send message.')
-      console.error(error)
     }
   }
 
   const handleDeleteMessage = async (id: string) => {
     if (!confirm('Are you sure you want to delete this message?')) return
-
     try {
       await deleteDoc(doc(firestore, 'signals', id))
-      alert('Message deleted successfully.')
     } catch (error) {
       console.error('Failed to delete message:', error)
       alert('Failed to delete message.')
@@ -128,30 +130,30 @@ export default function SignalRoom() {
   return (
     <div className="max-w-2xl mx-auto p-4 border rounded shadow">
       <h2 className="text-xl font-semibold mb-4">Signal Room</h2>
+
       <div className="h-64 overflow-y-auto border p-3 mb-4 space-y-2 bg-gray-50">
-        {messages.length === 0 && <p className="text-gray-500">No messages yet.</p>}
+        {messages.length === 0 && (
+          <p className="text-gray-500">No messages yet.</p>
+        )}
         {messages.map(msg => {
-          const displayRole = msg.senderUid === ADMIN_UID ? 'Admin' : 'User'
+          const isAdmin = msg.senderRole === 'admin'
           return (
             <div
               key={msg.id}
               className={`p-2 rounded ${
-                displayRole === 'Admin' ? 'bg-blue-200' : 'bg-gray-200'
+                isAdmin ? 'bg-blue-200' : 'bg-gray-200'
               } flex justify-between items-start`}
             >
               <div>
                 <p className="text-sm">{msg.text}</p>
                 <small className="text-gray-600">
-                  {displayRole} | {formatTimestamp(msg.timestamp)}
+                  {isAdmin ? 'Admin' : 'User'} | {formatTimestamp(msg.timestamp)}
                 </small>
               </div>
-
-              {/* Show delete button only if current user is admin */}
               {userRole === 'admin' && (
                 <button
                   onClick={() => handleDeleteMessage(msg.id)}
                   className="text-red-600 text-xs hover:underline ml-4"
-                  aria-label="Delete message"
                 >
                   Delete
                 </button>
@@ -184,5 +186,3 @@ export default function SignalRoom() {
     </div>
   )
 }
-
-

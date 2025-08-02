@@ -57,7 +57,7 @@ export default function UsersAdmin() {
     <div className="max-w-5xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-center">Users Management</h1>
       <table className="w-full border border-gray-300 rounded shadow-sm">
-        <thead className="bg-gray-100">
+<thead className="bg-gray-100">
   <tr>
     <th className="p-3 border border-gray-300">UID</th>
     <th className="p-3 border border-gray-300">Name</th>
@@ -67,42 +67,42 @@ export default function UsersAdmin() {
     <th className="p-3 border border-gray-300">Actions</th>
   </tr>
 </thead>
+<tbody>
+  {users.map(user => (
+    <tr key={user.uid} className="hover:bg-gray-50">
+      <td className="p-2 border border-gray-300 text-sm break-all">{user.uid}</td>
+      <td className="p-2 border border-gray-300">{user.name ?? 'N/A'}</td>
+      <td className="p-2 border border-gray-300">{user.email}</td>
+      <td className="p-2 border border-gray-300 capitalize">{user.role ?? 'user'}</td>
+      <td className="p-2 border border-gray-300">{user.plan ?? 'None'}</td>
+      <td className="p-2 border border-gray-300 space-x-2">
+        {user.role === 'admin' ? (
+          <button
+            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+            onClick={() => changeUserRole(user.uid, 'user')}
+          >
+            Demote to User
+          </button>
+        ) : (
+          <button
+            className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+            onClick={() => changeUserRole(user.uid, 'admin')}
+          >
+            Promote to Admin
+          </button>
+        )}
+      </td>
+    </tr>
+  ))}
+  {users.length === 0 && (
+    <tr>
+      <td colSpan={6} className="text-center p-4 text-gray-500 italic">
+        No users found.
+      </td>
+    </tr>
+  )}
+</tbody>
 
-        <tbody>
-          {users.map(user => (
-            <tr key={user.uid} className="hover:bg-gray-50">
-              <td className="p-2 border border-gray-300 text-sm break-all">{user.uid}</td>
-              <td className="p-2 border border-gray-300">{user.name ?? 'N/A'}</td>
-              <td className="p-2 border border-gray-300">{user.email}</td>
-              <td className="p-2 border border-gray-300 capitalize">{user.role ?? 'user'}</td>
-              <td className="p-2 border border-gray-300">{user.plan ?? 'None'}</td> {/* NEW */}
-              <td className="p-2 border border-gray-300 space-x-2">
-                {user.role === 'admin' ? (
-                  <button
-                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                    onClick={() => changeUserRole(user.uid, 'user')}
-                  >
-                    Demote to User
-                  </button>
-                ) : (
-                  <button
-                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    onClick={() => changeUserRole(user.uid, 'admin')}
-                  >
-                    Promote to Admin
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
-          {users.length === 0 && (
-            <tr>
-              <td colSpan={6} className="text-center p-4 text-gray-500 italic">
-                No users found.
-              </td>
-            </tr>
-          )}
-        </tbody>
       </table>
     </div>
   )
