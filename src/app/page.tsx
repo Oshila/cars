@@ -4,8 +4,11 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/lib/firebase';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+// Import your Loading Component
+import LoadingSpinner from '@/components/LoadingSpinner'; // Make sure this path is correct
 
+// 1. ADD YOUR featuredCars ARRAY BACK
 const featuredCars = [
   { id: '1', make: 'Toyota', model: 'Camry', year: 2023, price: 25000, image: '/cars/toyota-camry1.png' },
   { id: '2', make: 'BMW', model: 'X5', year: 2022, price: 55000, image: '/cars/bmwx5.png' },
@@ -13,6 +16,7 @@ const featuredCars = [
   { id: '4', make: 'Truck', model: 'D-Class', year: 2019, price: 32000, image: '/cars/truck1.png' },
 ];
 
+// 2. ADD YOUR reviews ARRAY BACK
 const reviews = [
   { id: 1, name: 'Jane Doe', text: 'Amazing service and fast delivery! Highly recommend AutoElite.' },
   { id: 2, name: 'John Smith', text: 'Found my dream car here, excellent support from the team.' },
@@ -20,19 +24,31 @@ const reviews = [
 ];
 
 export default function Home() {
-  const [user] = useAuthState(auth);
+  const [user, loading, error] = useAuthState(auth);
+  const [isClient, setIsClient] = useState(false); // To track client-side hydration
 
-  // Auto logout after 5 minutes
   useEffect(() => {
-    if (user) {
+    setIsClient(true);
+  }, []);
+
+  // Auto logout after 5 minutes - Keep this but ensure it only runs on client
+  useEffect(() => {
+    if (user && isClient) { // Added isClient check
       const timer = setTimeout(() => {
         auth.signOut();
         alert('Session expired. Please log in again.');
-      }, 5 * 60 * 1000); // 5 minutes
+      }, 5 * 60 * 1000);
       return () => clearTimeout(timer);
     }
-  }, [user]);
+  }, [user, isClient]);
 
+  // 1. Show a loading spinner while Firebase auth state is loading
+  // 2. OR show nothing until we know we're on the client to avoid hydration mismatch
+  if (loading || !isClient) {
+    return <LoadingSpinner />; // Or a simple <div>Loading...</div>
+  }
+
+  // The rest of your JSX can now safely use the `user` variable
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
@@ -41,6 +57,7 @@ export default function Home() {
           <div className="flex justify-between h-16 items-center">
             <h1 className="text-xl font-bold text-blue-600">AutoElite</h1>
             <div className="flex items-center space-x-4">
+              {/* This logic is now safe to use */}
               {user ? (
                 <Link href="/dashboard" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
                   Dashboard
