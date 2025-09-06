@@ -24,7 +24,7 @@ const reviews = [
 ];
 
 export default function Home() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading ] = useAuthState(auth);
   const [isClient, setIsClient] = useState(false); // To track client-side hydration
 
   useEffect(() => {
