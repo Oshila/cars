@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import Image from 'next/image';
+import {
+  getAuth,
+  onAuthStateChanged,
+} from 'firebase/auth';
 import {
   getFirestore,
   doc,
@@ -13,7 +17,7 @@ import {
   updateDoc,
   serverTimestamp,
 } from 'firebase/firestore';
-import app, { auth, db } from '@/lib/firebase';
+import app, { db } from '@/lib/firebase';
 
 interface Car {
   id: string;
@@ -21,7 +25,7 @@ interface Car {
   model: string;
   year: number;
   price: number;
-  image: string; // just the filename stored in Firestore
+  image: string;
   description: string;
 }
 
@@ -36,11 +40,11 @@ export default function Cars() {
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState<string | null>(null);
   const router = useRouter();
-  const authInstance = getAuth(app);
-  const dbInstance = getFirestore(app);
 
-  // Load user & cars
   useEffect(() => {
+    const authInstance = getAuth(app);
+    const dbInstance = getFirestore(app);
+
     const unsubscribe = onAuthStateChanged(authInstance, async (u) => {
       if (u) {
         const userDoc = await getDoc(doc(dbInstance, 'users', u.uid));
@@ -67,7 +71,7 @@ export default function Cars() {
     fetchCars();
 
     return () => unsubscribe();
-  }, [authInstance, dbInstance, router]);
+  }, [router]);
 
   const handlePurchase = async (car: Car) => {
     if (!user) return;
@@ -87,7 +91,7 @@ export default function Cars() {
         balance: user.balance - car.price,
       });
 
-      // Save purchase in "purchases"
+      // Save purchase
       await addDoc(collection(db, 'purchases'), {
         userId: user.uid,
         carId: car.id,
@@ -125,7 +129,7 @@ export default function Cars() {
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="container mx-auto px-4">
-        {/* Header with Back button */}
+        {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <button
             onClick={() => router.back()}
@@ -145,15 +149,17 @@ export default function Cars() {
           )}
         </div>
 
+        {/* Cars grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {cars.map((car) => (
-            <div
-              key={car.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden"
-            >
-              <img
-                src={`/cars/${car.image}`} // automatically pulls from public/cars/
+            <div key={car.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <Image
+                src={car.image.startsWith('/')
+                  ? car.image
+                  : `/cars/${car.image}`}
                 alt={`${car.make} ${car.model}`}
+                width={400}
+                height={300}
                 className="w-full h-48 object-cover"
               />
               <div className="p-4">

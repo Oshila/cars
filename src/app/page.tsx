@@ -3,14 +3,14 @@
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '@/lib/firebase';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect } from 'react';
 
-// Sample data for cars and reviews
 const featuredCars = [
-  { id: '1', make: 'Toyota', model: 'Camry', year: 2023, price: 25000, image: 'https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=800&q=80' },
-  { id: '2', make: 'BMW', model: 'X5', year: 2022, price: 55000, image: 'https://images.unsplash.com/photo-1617977301313-002b5d4e83a3?auto=format&fit=crop&w=800&q=80' },
-  { id: '3', make: 'Mercedes', model: 'C-Class', year: 2023, price: 42000, image: 'https://images.unsplash.com/photo-1618335583500-4bb8c3d7faba?auto=format&fit=crop&w=800&q=80' },
-  { id: '4', make: 'Truck', model: 'D-Class', year: 2019, price: 32000, image: 'https://images.unsplash.com/photo-1618335583500-4bb8c3d7faba?auto=format&fit=crop&w=800&q=80' },
+  { id: '1', make: 'Toyota', model: 'Camry', year: 2023, price: 25000, image: '/cars/toyota-camry1.png' },
+  { id: '2', make: 'BMW', model: 'X5', year: 2022, price: 55000, image: '/cars/bmwx5.png' },
+  { id: '3', make: 'Tesla', model: 'Model3', year: 2023, price: 42000, image: '/cars/tesla-model3.png' },
+  { id: '4', make: 'Truck', model: 'D-Class', year: 2019, price: 32000, image: '/cars/truck1.png' },
 ];
 
 const reviews = [
@@ -20,9 +20,9 @@ const reviews = [
 ];
 
 export default function Home() {
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
 
-  // Auto logout after 1 hour
+  // Auto logout after 5 minutes
   useEffect(() => {
     if (user) {
       const timer = setTimeout(() => {
@@ -66,10 +66,12 @@ export default function Home() {
       {/* Hero Section */}
       <div className="relative bg-gray-900">
         <div className="absolute inset-0">
-          <img
-            className="w-full h-full object-cover"
-            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1974&q=80"
+          <Image
+            src="/images/car1.jpg"
             alt="Car dealership"
+            layout="fill"
+            objectFit="cover"
+            className="w-full h-full"
           />
           <div className="absolute inset-0 bg-gray-900 mix-blend-multiply" aria-hidden="true" />
         </div>
@@ -95,7 +97,13 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {featuredCars.map((car) => (
               <div key={car.id} className="bg-white shadow-md rounded-lg overflow-hidden">
-                <img src={car.image} alt={`${car.make} ${car.model}`} className="w-full h-48 object-cover" />
+                <Image
+                  src={car.image}
+                  alt={`${car.make} ${car.model}`}
+                  width={400}
+                  height={300}
+                  className="object-cover w-full"
+                />
                 <div className="p-4">
                   <h3 className="text-xl font-semibold">{car.make} {car.model}</h3>
                   <p className="text-gray-600">{car.year}</p>

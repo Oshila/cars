@@ -3,6 +3,11 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../lib/firebase';
 import { useRouter } from 'next/router';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { User } from 'firebase/auth';
+
+interface AppUser extends User {
+  isAdmin?: boolean; // optional, in case Firestore user data has it
+}
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -14,26 +19,25 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-    
-    if (!loading && user && adminOnly && !(user as any).isAdmin) {
-      router.push('/dashboard');
-    }
+    const checkAdmin = async () => {
+      if (!loading && !user) {
+        router.push('/login');
+        return;
+      }
+
+      if (!loading && user && adminOnly) {
+        // fetch Firestore user to check isAdmin
+        const tokenResult = await user.getIdTokenResult();
+        const isAdmin = tokenResult.claims.admin;
+        if (!isAdmin) router.push('/dashboard');
+      }
+    };
+
+    checkAdmin();
   }, [user, loading, router, adminOnly]);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (!user) {
-    return null;
-  }
-
-  if (adminOnly && !(user as any).isAdmin) {
-    return null;
-  }
+  if (loading) return <LoadingSpinner />;
+  if (!user) return null;
 
   return <>{children}</>;
 }

@@ -3,73 +3,87 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '@/lib/firebase';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setErrorMsg('');
 
     try {
-      // Sign in with Firebase Auth
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Check if this user is an admin in Firestore
       const userDoc = await getDoc(doc(db, 'users', user.uid));
-      if (!userDoc.exists() || !userDoc.data().isAdmin) {
-        setError('You are not authorized as an admin.');
+      if (!userDoc.exists()) {
+        setErrorMsg('User not found');
+        setLoading(false);
         return;
       }
 
-      router.push('/admin'); // ✅ redirect to admin dashboard
-    } catch (err: any) {
-      setError('Invalid email or password.');
+      const userData = userDoc.data();
+      if (!userData?.isAdmin) {
+        setErrorMsg('You are not authorized to access this page');
+        setLoading(false);
+        return;
+      }
+
+      router.push('/admin');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErrorMsg(err.message);
+      } else {
+        setErrorMsg('Login failed');
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
         onSubmit={handleLogin}
-        className="bg-white p-6 rounded shadow-md w-96"
+        className="bg-white p-8 rounded-lg shadow-md w-full max-w-md"
       >
-        <h1 className="text-2xl font-bold mb-4 text-center">Admin Login</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">Admin Login</h1>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+        {errorMsg && <p className="text-red-500 mb-4">{errorMsg}</p>}
 
-        <input
-          type="email"
-          placeholder="Admin Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border p-2 rounded mb-3"
-          required
-        />
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full border p-2 rounded mb-3"
-          required
-        />
+        <div className="mb-6">
+          <label className="block text-gray-700 mb-2">Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>

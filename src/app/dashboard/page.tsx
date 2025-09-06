@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { auth, db } from '@/lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import {
@@ -14,6 +15,7 @@ import {
   addDoc,
   updateDoc,
   serverTimestamp,
+  DocumentData,
 } from 'firebase/firestore';
 import Link from 'next/link';
 
@@ -76,7 +78,7 @@ export default function Dashboard() {
         const snap = await getDocs(q);
 
         const purchaseList: Purchase[] = snap.docs.map((d) => {
-          const data = d.data() as any;
+          const data = d.data() as DocumentData;
           return {
             id: d.id,
             carId: data.carId,
@@ -137,8 +139,9 @@ export default function Dashboard() {
       });
       setFundMessage('Request sent! Contact admin to confirm USDT payment.');
       setFundAmount(0);
-    } catch (error: any) {
-      setFundMessage(`Error: ${error.message}`);
+    } catch (error) {
+      if (error instanceof Error) setFundMessage(`Error: ${error.message}`);
+      else setFundMessage('Unknown error occurred.');
     } finally {
       setFundLoading(false);
     }
@@ -243,7 +246,7 @@ export default function Dashboard() {
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-2xl font-semibold mb-6">Your Purchased Cars</h2>
         {purchases.length === 0 ? (
-          <p className="text-gray-600">You haven't purchased any cars yet.</p>
+          <p className="text-gray-600">You haven&apos;t purchased any cars yet.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {purchases.map((purchase) => {
@@ -255,9 +258,13 @@ export default function Dashboard() {
                 >
                   {car ? (
                     <>
-                      <img
-                        src={`/cars/${car.image}`} // <-- fixed image path
+                      <Image
+                        src={car.image.startsWith('/')
+                          ? car.image
+                          : `/cars/${car.image}`}
                         alt={`${car.make} ${car.model}`}
+                        width={400}
+                        height={300}
                         className="w-full h-48 object-cover"
                       />
                       <div className="p-4">
