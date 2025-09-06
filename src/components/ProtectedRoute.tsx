@@ -1,7 +1,10 @@
+// components/ProtectedRoute.tsx
+'use client'; // This is necessary because we are using hooks
+
 import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../lib/firebase';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'; // <-- FIX: Change the import
 import LoadingSpinner from '../components/LoadingSpinner';
 
 interface ProtectedRouteProps {
@@ -11,8 +14,8 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
   const [user, loading] = useAuthState(auth);
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null); // null = unknown yet
-  const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const router = useRouter(); // This now uses the correct router
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -33,7 +36,7 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
           router.push('/dashboard');
         }
       } else {
-        setIsAdmin(true); // not admin-only page, allow access
+        setIsAdmin(true);
       }
     };
 
