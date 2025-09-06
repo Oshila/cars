@@ -1,203 +1,197 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/css'
-import 'swiper/css/autoplay'
-import { Autoplay } from 'swiper/modules'
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/lib/firebase';
+import Link from 'next/link';
+import { useEffect } from 'react';
 
-export default function HomePage() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const sliderImages = Array.from({ length: 14 }, (_, i) => `/profits/sample${i + 1}.jpg`)
+// Sample data for cars and reviews
+const featuredCars = [
+  { id: '1', make: 'Toyota', model: 'Camry', year: 2023, price: 25000, image: 'https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=800&q=80' },
+  { id: '2', make: 'BMW', model: 'X5', year: 2022, price: 55000, image: 'https://images.unsplash.com/photo-1617977301313-002b5d4e83a3?auto=format&fit=crop&w=800&q=80' },
+  { id: '3', make: 'Mercedes', model: 'C-Class', year: 2023, price: 42000, image: 'https://images.unsplash.com/photo-1618335583500-4bb8c3d7faba?auto=format&fit=crop&w=800&q=80' },
+  { id: '4', make: 'Truck', model: 'D-Class', year: 2019, price: 32000, image: 'https://images.unsplash.com/photo-1618335583500-4bb8c3d7faba?auto=format&fit=crop&w=800&q=80' },
+];
+
+const reviews = [
+  { id: 1, name: 'Jane Doe', text: 'Amazing service and fast delivery! Highly recommend AutoElite.' },
+  { id: 2, name: 'John Smith', text: 'Found my dream car here, excellent support from the team.' },
+  { id: 3, name: 'Emily Rose', text: 'Great experience, smooth transactions, and very reliable.' },
+];
+
+export default function Home() {
+  const [user, loading] = useAuthState(auth);
+
+  // Auto logout after 1 hour
+  useEffect(() => {
+    if (user) {
+      const timer = setTimeout(() => {
+        auth.signOut();
+        alert('Session expired. Please log in again.');
+      }, 5 * 60 * 1000); // 5 minutes
+      return () => clearTimeout(timer);
+    }
+  }, [user]);
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans">
-      <header className="p-6 border-b border-white/10">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <img src="/alchemy-logo.jpg" alt="Alchemy Logo" className="w-10 h-10 rounded-full object-cover" />
-            <h1 className="text-2xl font-bold tracking-wide">Alchemy Traders Network</h1>
-          </div>
-
-          <nav className="hidden md:flex space-x-6">
-            <a href="#features" className="hover:underline">Features</a>
-            <a href="#pricing" className="hover:underline">Pricing</a>
-            <a href="#profits" className="hover:underline">Setups</a>
-            <a href="/login" className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition">Login</a>
-          </nav>
-
-          <button
-            className="md:hidden text-white"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-
-        {mobileOpen && (
-          <div className="md:hidden mt-4 px-4 space-y-3">
-            <a href="#features" className="block hover:underline">Features</a>
-            <a href="#pricing" className="block hover:underline">Pricing</a>
-            <a href="#profits" className="block hover:underline">Setups</a>
-            <a href="/login" className="block bg-white text-black px-4 py-2 rounded w-max hover:bg-gray-200 transition">Login</a>
-          </div>
-        )}
-      </header>
-
-  <section className="relative min-h-[90vh] flex items-center justify-center text-center text-white overflow-hidden bg-black">
-  {/* Background Image */}
-  <div className="absolute inset-0 z-0 flex items-center justify-center">
-    <img
-      src="/alchemy-hero.jpg" // Make sure the image is in public/
-      alt="Alchemy Background"
-      className="max-w-[90%] max-h-[90%] object-contain opacity-20"
-    />
-  </div>
-
-  {/* Foreground Text */}
-  <div className="relative z-10 px-6 max-w-3xl">
-    <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
-      Trade Like an <span className="text-yellow-400">Alchemist</span>
-    </h1>
-    <p className="text-xl text-white/80 mb-8">
-      Master the market with precision, clarity, and strategy — one signal at a time.
-    </p>
-    <a
-      href="/register"
-      className="inline-block bg-yellow-500 hover:bg-yellow-600 text-black px-6 py-3 rounded-xl text-lg font-semibold transition"
-    >
-      Get Started
-    </a>
-  </div>
-</section>
-
-
-
-      <section className="py-20 px-6 text-center bg-gray-900">
-        <h2 className="text-4xl font-bold mb-4">Join Our Free Telegram Channel</h2>
-        <p className="text-white/70 mb-6">Daily signals. Real gains. No noise.</p>
-        <a
-          href="https://t.me/alchemytradersnetwork"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block bg-white text-black px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition"
-        >
-          Join Telegram
-        </a>
-      </section>
-
-      <section id="features" className="py-20 bg-black text-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 px-6">
-          <div className="p-6 rounded-xl border border-white/10 bg-gray-950 hover:shadow-md transition">
-            <h3 className="text-xl font-bold mb-2">Private Signal Room</h3>
-            <p>Only subscribers access premium calls, updated live.</p>
-          </div>
-          <div className="p-6 rounded-xl border border-white/10 bg-gray-950 hover:shadow-md transition">
-            <h3 className="text-xl font-bold mb-2">Telegram Alerts</h3>
-            <p>Real-time alerts delivered directly to your Telegram app.</p>
-          </div>
-          <div className="p-6 rounded-xl border border-white/10 bg-gray-950 hover:shadow-md transition">
-            <h3 className="text-xl font-bold mb-2">Built For Traders</h3>
-            <p>Minimal, fast, and effective for serious market players.</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Navigation */}
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16 items-center">
+            <h1 className="text-xl font-bold text-blue-600">AutoElite</h1>
+            <div className="flex items-center space-x-4">
+              {user ? (
+                <Link href="/dashboard" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link href="/login" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">
+                    Login
+                  </Link>
+                  <Link href="/register" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">
+                    Register
+                  </Link>
+                  <Link href="/admin-login" className="text-red-500 hover:text-red-600 px-3 py-2 rounded-md">
+                    Admin
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </section>
+      </nav>
 
-      <section id="profits" className="py-20 bg-white text-black px-6">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-8">Trade Setups & Results</h2>
-          <Swiper
-            slidesPerView={'auto'}
-            spaceBetween={20}
-            loop
-            autoplay={{ delay: 2500, disableOnInteraction: false }}
-            modules={[Autoplay]}
-            className="w-full"
-          >
-            {sliderImages.map((src, index) => (
-              <SwiperSlide key={index} className="!w-auto">
-                <img
-                  src={src}
-                  alt={`Sample ${index + 1}`}
-                  className="h-56 md:h-64 rounded-xl object-cover"
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+      {/* Hero Section */}
+      <div className="relative bg-gray-900">
+        <div className="absolute inset-0">
+          <img
+            className="w-full h-full object-cover"
+            src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1974&q=80"
+            alt="Car dealership"
+          />
+          <div className="absolute inset-0 bg-gray-900 mix-blend-multiply" aria-hidden="true" />
         </div>
-      </section>
+        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            Find Your Dream Car
+          </h1>
+          <p className="mt-6 text-xl text-gray-300 max-w-3xl">
+            Browse our extensive collection of premium vehicles and drive away with the car of your dreams.
+          </p>
+          <div className="mt-10">
+            <Link href="/cars" className="inline-block bg-blue-500 py-3 px-6 rounded-md text-base font-medium text-white hover:bg-blue-600">
+              Browse Inventory
+            </Link>
+          </div>
+        </div>
+      </div>
 
-      <section id="pricing" className="py-20 px-6 bg-black text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-4">Choose Your Plan</h2>
-          <p className="text-white/60 mb-12">Clear pricing. Flexible access. Consistent value.</p>
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { title: 'Bronze', price: '$15 / 2 Weeks', benefits: ['VIP Signal Room', 'Telegram Alerts'] },
-              { title: 'Silver', price: '$30 / 1 Month', benefits: ['+ Priority Signals', 'Trade Recaps'] },
-              { title: 'Gold', price: '$60 / 2 Months', benefits: ['+ Weekly Reviews', 'Exclusive Setups'] },
-              { title: 'Platinum', price: '$360 / Year', benefits: ['All Access', '1-on-1 Mentorship', 'Chart Templates'] },
-            ].map(({ title, price, benefits }) => (
-              <div key={title} className="p-6 bg-gray-900 border border-white/10 rounded-xl hover:shadow-lg transition">
-                <h3 className="text-xl font-bold">{title}</h3>
-                <p className="my-2 text-lg font-semibold">{price}</p>
-                <ul className="text-sm text-white/70 mb-4 space-y-1">
-                  {benefits.map((b, i) => <li key={i}>• {b}</li>)}
-                </ul>
-                <a href="/login" className="bg-white text-black w-full py-2 rounded-xl hover:bg-gray-300 transition block text-center">Subscribe</a>
+      {/* Featured Cars Section */}
+      <div className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-6">Featured Cars</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {featuredCars.map((car) => (
+              <div key={car.id} className="bg-white shadow-md rounded-lg overflow-hidden">
+                <img src={car.image} alt={`${car.make} ${car.model}`} className="w-full h-48 object-cover" />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold">{car.make} {car.model}</h3>
+                  <p className="text-gray-600">{car.year}</p>
+                  <p className="text-blue-600 font-bold mt-2">${car.price.toLocaleString()}</p>
+                  <Link href="/cars" className="mt-3 inline-block text-blue-500 hover:underline">
+                    View Details
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="py-20 px-6 bg-white text-black">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <h2 className="text-4xl font-bold mb-4">1-on-1 With Alchemist</h2>
-            <p className="text-lg mb-4">Get direct mentorship on strategy, psychology, and consistent results — tailored to your trading journey.</p>
-            <a href="https://t.me/the_alchemist99" target="_blank" rel="noopener noreferrer" className="inline-block bg-black text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition">
-              Apply Now
-            </a>
-          </div>
-          <div className="flex justify-center">
-            <img
-              src="/alchemy-manage.jpg"
-              alt="Mentorship"
-              className="rounded-2xl shadow-lg max-h-80 object-cover"
-            />
+      {/* Reviews Section */}
+      <div className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-6 text-center">Customer Reviews</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {reviews.map((review) => (
+              <div key={review.id} className="bg-gray-50 p-6 rounded-lg shadow-md">
+                <p className="text-gray-700 italic">"{review.text}"</p>
+                <p className="mt-4 font-semibold text-gray-900">- {review.name}</p>
+              </div>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      <footer className="bg-black text-white py-10 px-6">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-xl font-bold mb-2">Alchemy Traders Network</h3>
-            <p className="text-sm text-white/60">Empowering traders with knowledge, clarity, and confidence.</p>
-          </div>
-          <div>
-            <h4 className="text-lg font-semibold mb-2">Contact</h4>
-            <p>Email: <a href="mailto:alchemyfx@gmail.com" className="underline">alchemyfx@gmail.com</a></p>
-            <p>Phone: +230000000</p>
-          </div>
-          <div>
-            <h4 className="text-lg font-semibold mb-2">Follow Alchemist</h4>
-            <div className="space-y-1 text-sm">
-              <a href="https://t.me/alchemytradersnetwork" target="_blank" className="hover:underline block">Telegram Channel</a>
-              <a href="https://instagram.com/yannemmy01" target="_blank" className="hover:underline block">Instagram</a>
-              <a href="https://x.com/lqd_alchemist?s=21" target="_blank" className="hover:underline block">X (Twitter)</a>
+      {/* Features Section */}
+      <div className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-6 text-center">Why Choose AutoElite</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Features Items */}
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0 bg-blue-500 p-3 rounded-md text-white">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Secure Transactions</h3>
+                <p className="mt-1 text-gray-600">All purchases are protected with our secure payment system.</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0 bg-blue-500 p-3 rounded-md text-white">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Nationwide Shipping</h3>
+                <p className="mt-1 text-gray-600">We deliver to any location with full insurance and tracking.</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0 bg-blue-500 p-3 rounded-md text-white">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Account Management</h3>
+                <p className="mt-1 text-gray-600">Track purchases, balance, and shipping in one place.</p>
+              </div>
+            </div>
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0 bg-blue-500 p-3 rounded-md text-white">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold">Fast Support</h3>
+                <p className="mt-1 text-gray-600">Support team available 24/7 for all inquiries.</p>
+              </div>
             </div>
           </div>
         </div>
-       <div className="text-center text-white/40 text-sm mt-10">
-  © {new Date().getFullYear()} Alchemy Traders Network. All rights reserved.
-</div>
+      </div>
 
+      {/* Footer */}
+      <footer className="bg-gray-800">
+        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-400 text-center md:text-left">© 2023 AutoElite. All rights reserved.</p>
+            <div className="flex space-x-6 mt-4 md:mt-0">
+              <a href="#" className="text-gray-400 hover:text-gray-300">Privacy Policy</a>
+              <a href="#" className="text-gray-400 hover:text-gray-300">Terms of Service</a>
+              <a href="#" className="text-gray-400 hover:text-gray-300">Contact Us</a>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
-  )
+  );
 }

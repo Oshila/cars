@@ -1,29 +1,27 @@
-// app/layout.tsx
-import '../styles/globals.css'
-import ClientRootLayout from '@/components/ClientRootLayout'
-import { PlanProvider } from '@/context/PlanContext'
-import { AuthProvider } from '@/lib/auth'  // import AuthProvider
+// src/app/layout.tsx
+import './globals.css';
+import { PlanProvider } from '@/context/PlanContext';
+import { AuthProvider } from '@/lib/auth';
 
 export const metadata = {
-  title: 'Alchemist',
-  description: 'Trading platform',
-}
+  title: 'Car Dealer Site',
+  description: 'A car dealership platform built with Next.js and Firebase',
+};
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
-        <AuthProvider>   {/* Wrap in AuthProvider first */}
+        <AuthProvider>
           <PlanProvider>
-            <ClientRootLayout>{children}</ClientRootLayout>
+            {children}
           </PlanProvider>
         </AuthProvider>
       </body>
     </html>
-  )
+  );
 }
-
-
-
-
-
