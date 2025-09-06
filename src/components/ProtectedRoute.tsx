@@ -3,7 +3,6 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../lib/firebase';
 import { useRouter } from 'next/router';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { User } from 'firebase/auth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
