@@ -1,13 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../lib/firebase';
 import { useRouter } from 'next/router';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { User } from 'firebase/auth';
-
-interface AppUser extends User {
-  isAdmin?: boolean; // optional, in case Firestore user data has it
-}
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -16,6 +12,7 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
   const [user, loading] = useAuthState(auth);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null); // null = unknown yet
   const router = useRouter();
 
   useEffect(() => {
@@ -26,17 +23,25 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
       }
 
       if (!loading && user && adminOnly) {
-        // fetch Firestore user to check isAdmin
-        const tokenResult = await user.getIdTokenResult();
-        const isAdmin = tokenResult.claims.admin;
-        if (!isAdmin) router.push('/dashboard');
+        try {
+          const tokenResult = await user.getIdTokenResult();
+          setIsAdmin(!!tokenResult.claims.admin);
+          if (!tokenResult.claims.admin) {
+            router.push('/dashboard');
+          }
+        } catch (error) {
+          console.error('Failed to check admin claims:', error);
+          router.push('/dashboard');
+        }
+      } else {
+        setIsAdmin(true); // not admin-only page, allow access
       }
     };
 
     checkAdmin();
   }, [user, loading, router, adminOnly]);
 
-  if (loading) return <LoadingSpinner />;
+  if (loading || (adminOnly && isAdmin === null)) return <LoadingSpinner />;
   if (!user) return null;
 
   return <>{children}</>;

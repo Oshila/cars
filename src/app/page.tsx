@@ -64,17 +64,14 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <div className="relative bg-gray-900">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/car1.jpg"
-            alt="Car dealership"
-            layout="fill"
-            objectFit="cover"
-            className="w-full h-full"
-          />
-          <div className="absolute inset-0 bg-gray-900 mix-blend-multiply" aria-hidden="true" />
-        </div>
+      <div className="relative bg-gray-900 h-[500px]">
+        <Image
+          src="/images/car1.jpg"
+          alt="Car dealership"
+          layout="fill"
+          objectFit="cover"
+        />
+        <div className="absolute inset-0 bg-gray-900 mix-blend-multiply" aria-hidden="true" />
         <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
             Find Your Dream Car
@@ -90,20 +87,14 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Featured Cars Section */}
+      {/* Featured Cars */}
       <div className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-gray-900 mb-6">Featured Cars</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featuredCars.map((car) => (
+            {featuredCars.map(car => (
               <div key={car.id} className="bg-white shadow-md rounded-lg overflow-hidden">
-                <Image
-                  src={car.image}
-                  alt={`${car.make} ${car.model}`}
-                  width={400}
-                  height={300}
-                  className="object-cover w-full"
-                />
+                <Image src={car.image} alt={`${car.make} ${car.model}`} width={400} height={300} className="object-cover w-full" />
                 <div className="p-4">
                   <h3 className="text-xl font-semibold">{car.make} {car.model}</h3>
                   <p className="text-gray-600">{car.year}</p>
@@ -118,14 +109,14 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Reviews Section */}
+      {/* Reviews */}
       <div className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-gray-900 mb-6 text-center">Customer Reviews</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {reviews.map((review) => (
+            {reviews.map(review => (
               <div key={review.id} className="bg-gray-50 p-6 rounded-lg shadow-md">
-                <p className="text-gray-700 italic">"{review.text}"</p>
+                <p className="text-gray-700 italic">&quot;{review.text}&quot;</p>
                 <p className="mt-4 font-semibold text-gray-900">- {review.name}</p>
               </div>
             ))}
@@ -133,12 +124,11 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Features Section */}
+      {/* Features */}
       <div className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-gray-900 mb-6 text-center">Why Choose AutoElite</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Features Items */}
             <div className="flex items-start space-x-4">
               <div className="flex-shrink-0 bg-blue-500 p-3 rounded-md text-white">
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
